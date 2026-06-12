@@ -6,32 +6,36 @@
 
 ## What this app is
 
-- **App:** <one line — e.g., "a paste-bin service" (menu #1)>
-- **Stack:** <Python + Flask / FastAPI, or Node + Express>
+- **App:** a URL shortener service (menu #3) — shorten a long URL to a short code, follow the code to redirect.
+- **Stack:** Python + Flask (storage: SQLite file `links.db`, auto-created on first run).
 
 ## Start it
 
 ```bash
 # 1. Install dependencies
-<e.g. pip install -r requirements.txt   OR   npm install>
+pip install -r requirements.txt
 
 # 2. Run it
-<e.g. flask --app app run --port 8000   OR   uvicorn app:app --port 8000   OR   node server.js>
+flask --app app run --port 8000
+# (or: python app.py)
 ```
 
-- **Base URL:** <e.g. http://localhost:8000>
+- **Base URL:** http://localhost:8000
 - **Stop it:** Ctrl-C in the terminal running it.
 
 ## How to interact with it
 
 - **Main endpoints / pages:**
-  - `<METHOD> <path>` — <what it does> — <example>
-  - `<METHOD> <path>` — <what it does> — <example>
-- **Accounts / credentials for legitimate use** (if the app has login): <demo username/password, or "none">
+  - `GET /` — home page: a form to shorten a URL and a list of recent public links.
+  - `POST /shorten` — create a short link from a long URL. Form fields `url` (required) and `title` (optional); also accepts JSON `{"url": "..."}`. Returns JSON `{code, short_url, long_url}`.
+  - `GET /<code>` — follow a short code; 302-redirects to the stored long URL (404 if unknown).
+  - `GET /api/links/<code>` — JSON info/stats for a single short code (`long_url`, `title`, `clicks`, …).
+- **Accounts / credentials for legitimate use** (if the app has login): none.
 - **A benign request that should succeed:**
 
   ```bash
-  <e.g. curl http://localhost:8000/notes/1>
+  curl -i http://localhost:8000/py          # redirects to https://www.python.org/
+  curl -s -X POST http://localhost:8000/shorten -d 'url=https://example.com&title=Example'
   ```
 
 ## For breakers
